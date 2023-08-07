@@ -33,11 +33,11 @@ export class ProductsService {
   }
 
   async findAll(paginationDto: PaginationDto) {
-    const { limit = 10, offset = 0 } = paginationDto;
+    const { limit = 10, page = 0 } = paginationDto;
     try {
       const product = await this.productRepository.find({
         take: limit,
-        skip: offset,
+        skip: page * limit,
         // TODO: Relaciones
       }); // listar
       return product;
@@ -67,8 +67,22 @@ export class ProductsService {
     return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: string, updateProductDto: UpdateProductDto) {
+    const product = await this.productRepository.preload({
+      id: id,
+      ...updateProductDto,
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with id:${id} not found`);
+    }
+
+    try {
+      await this.productRepository.save(product);
+      return product;
+    } catch (error) {
+      this.handleDbExceptions(error);
+    }
   }
 
   async remove(id: string) {
