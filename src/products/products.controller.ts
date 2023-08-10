@@ -30,8 +30,8 @@ export class ProductsController {
   }
 
   @Get(':search')
-  findOne(@Param('search', ParseUUIDPipe) search: string) {
-    return this.productsService.findOne(search);
+  findOne(@Param('search') search: string) {
+    return this.productsService.findOnePlain(search);
   }
 
   @Patch(':id')
