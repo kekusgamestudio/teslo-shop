@@ -34,3 +34,8 @@ $ yarn run start:prod
 ```
 
 
+## 5. Ejecución de seed
+Para llenar la DB con datos de prueba ejecute seed
+```bash
+$ curl --location 'localhost:3000/api/seed'
+```
